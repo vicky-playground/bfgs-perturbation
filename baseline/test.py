@@ -9,7 +9,7 @@ from tool.benchmark2013 import functions2 as functions
 from numpy import (atleast_1d, eye, mgrid, argmin, zeros, shape, squeeze,
                    vectorize, asarray, sqrt, Inf, asfarray, isinf)
 from scipy.optimize import minimize 
-from scipy.optimize import minpack2
+from scipy.optimize import _minpack2
 from numpy.compat import asbytes
 import scipy.optimize as opt
 import warnings
@@ -108,12 +108,13 @@ def wrapper_function2(function, args):
         #print(*(wrapper_args + args)) # the new solution from each evaluation
         np.where( wrapper_args>np.float64(100.0), np.float64(100.0), wrapper_args)
         np.where( wrapper_args<np.float64(-100.0), np.float64(-100.0), wrapper_args)
+        #print(wrapper_args) # validate 
         fval = function(*(wrapper_args + args)) 
         
         if ncalls[1] > fval:
             ncalls[1] = fval
             ncalls[1] = fval
-        if (ncalls[0]>=3000): # meet the maximum evaluations 
+        if (ncalls[0]>=300000): # meet the maximum evaluations 
             return fval
         else:
             ncalls[0] += 1
@@ -184,8 +185,8 @@ def approx_fprime(xk, f, epsilon, *args):
     """
     return _approx_fprime_helper(xk, f, epsilon, args=args)
 
-class LineSearchWarning(RuntimeWarning):
-    pass
+#class LineSearchWarning(RuntimeWarning):
+    #pass
 class _LineSearchError(RuntimeError):
     pass
 
@@ -312,7 +313,7 @@ def scalar_search_wolfe1(phi, derphi, phi0=None, old_phi0=None, derphi0=None,
 
     maxiter=30
     for i in range(maxiter):
-        stp, phi1, derphi1, task = minpack2.dcsrch(alpha1, phi1, derphi1,
+        stp, phi1, derphi1, task = _minpack2.dcsrch(alpha1, phi1, derphi1,
                                                    c1, c2, xtol, task,
                                                    amin, amax, isave, dsave)
         if task[:2] == asbytes('FG'):
@@ -665,11 +666,12 @@ def vecnorm(x, ord=2):
         return numpy.sum(numpy.abs(x)**ord, axis=0)**(1.0 / ord)
 def _check_unknown_options(unknown_options):
     if unknown_options:
-        msg = ", ".join(map(str, unknown_options.keys()))
+        pass
+        #msg = ", ".join(map(str, unknown_options.keys()))
         # Stack level 4: this is called from _minimize_*, which is
         # called from another function in Scipy. Level 4 is the first
         # level in user code.
-        warnings.warn("Unknown solver options: %s" % msg, 4)
+        #warnings.warn("Unknown solver options: %s" % msg, 4)
 
 def _line_search_wolfe12(f, fprime, xk, pk, gfk, old_fval, old_old_fval,
                          **kwargs):
@@ -689,13 +691,13 @@ def _line_search_wolfe12(f, fprime, xk, pk, gfk, old_fval, old_old_fval,
     if ret[0] is None:
         # line search failed: try different one.
         with warnings.catch_warnings():
-            warnings.simplefilter('ignore', LineSearchWarning)
+            #warnings.simplefilter('ignore', LineSearchWarning)
             ret = line_search_wolfe2(f, fprime, xk, pk, gfk,
                                      old_fval, old_old_fval)
 
     if ret[0] is None:
-        raise _LineSearchError()
-
+        pass
+        #raise _LineSearchError()
     return ret
 
 def fmin_bfgs(f, x0, fprime=None, args=(), gtol=1e-5, norm=float('inf'),maxfun=None,
@@ -920,12 +922,12 @@ def _minimize_bfgs_2(fun, x0, args=(), jac=None, callback=None,
             rhok = 1.0 / (numpy.dot(yk, sk))
         except ZeroDivisionError:
             rhok = 1000.0 # default is 1000
-            if disp:
-                print("Divide-by-zero encountered: rhok assumed large")
+            #if disp:
+                #print("Divide-by-zero encountered: rhok assumed large")
         if isinf(rhok):  # this is patch for numpy. 
             rhok = 1000.0 # default is 1000
-            if disp:
-                print("Divide-by-zero encountered: rhok assumed large")
+            #if disp:
+                #print("Divide-by-zero encountered: rhok assumed large")
         A1 = I - sk[:, numpy.newaxis] * yk[numpy.newaxis, :] * rhok
         A2 = I - yk[:, numpy.newaxis] * sk[numpy.newaxis, :] * rhok
         Hk = numpy.dot(A1, numpy.dot(Hk, A2)) + (rhok * sk[:, numpy.newaxis] *
@@ -940,29 +942,29 @@ def _minimize_bfgs_2(fun, x0, args=(), jac=None, callback=None,
     if warnflag == 2:
         msg = _status_message['pr_loss']
         if disp:
-            print("Warning: " + msg)
-            print("         Current function value: %f" % fval)
+            #print("Warning: " + msg)
+            #print("         Current function value: %f" % fval)
             print("         Iterations: %d" % k)
             print("         Function evaluations: %d" % func_calls[0])
-            print("         Gradient evaluations: %d" % grad_calls[0])
+            #print("         Gradient evaluations: %d" % grad_calls[0])
     
     elif k >= maxiter:
         warnflag = 1
         msg = _status_message['maxiter']
         if disp:
-            print("Warning: " + msg)
-            print("         Current function value: %f" % fval)
+            #print("Warning: " + msg)
+            #print("         Current function value: %f" % fval)
             print("         Iterations: %d" % k)
             print("         Function evaluations: %d" % func_calls[0])
-            print("         Gradient evaluations: %d" % grad_calls[0])
+            #print("         Gradient evaluations: %d" % grad_calls[0])
     else:
         msg = _status_message['success']
         if disp:
-            print(msg)
-            print("         Current function value: %f" % fval)
+            #print(msg)
+            #print("         Current function value: %f" % fval)
             print("         Iterations: %d" % k)
             print("         Function evaluations: %d" % func_calls[0])
-            print("         Gradient evaluations: %d" % grad_calls[0])
+            #print("         Gradient evaluations: %d" % grad_calls[0])
 
     result = OptimizeResult(fun=fval, jac=gfk, hess_inv=Hk, nfev=func_calls[0],
                             njev=grad_calls[0], status=warnflag,
@@ -1068,12 +1070,12 @@ def _minimize_bfgs(fun, x0, args=(), jac=None, callback=None,
             rhok = 1.0 / (numpy.dot(yk, sk))
         except ZeroDivisionError:
             rhok = 1000.0 # default is 1000
-            if disp:
-                print("Divide-by-zero encountered: rhok assumed large")
+            #if disp:
+                #print("Divide-by-zero encountered: rhok assumed large")
         if isinf(rhok):  # this is patch for numpy. 
             rhok = 1000.0 # default is 1000
-            if disp:
-                print("Divide-by-zero encountered: rhok assumed large")
+            #if disp:
+                #print("Divide-by-zero encountered: rhok assumed large")
         A1 = I - sk[:, numpy.newaxis] * yk[numpy.newaxis, :] * rhok
         A2 = I - yk[:, numpy.newaxis] * sk[numpy.newaxis, :] * rhok
         Hk = numpy.dot(A1, numpy.dot(Hk, A2)) + (rhok * sk[:, numpy.newaxis] *
@@ -1088,26 +1090,26 @@ def _minimize_bfgs(fun, x0, args=(), jac=None, callback=None,
     if warnflag == 2:
         msg = _status_message['pr_loss']
         if disp:
-            print("Warning: " + msg)
-            print("         Current function value: %f" % fval)
+            #print("Warning: " + msg)
+            #print("         Current function value: %f" % fval)
             print("         Iterations: %d" % k)
             print("         Function evaluations: %d" % func_calls[0])
-            print("         Gradient evaluations: %d" % grad_calls[0])
+            #print("         Gradient evaluations: %d" % grad_calls[0])
     
     elif k >= maxiter:
         warnflag = 1
         msg = _status_message['maxiter']
         if disp:
-            print("Warning: " + msg)
-            print("         Current function value: %f" % fval)
+            #print("Warning: " + msg)
+            #print("         Current function value: %f" % fval)
             print("         Iterations: %d" % k)
             print("         Function evaluations: %d" % func_calls[0])
-            print("         Gradient evaluations: %d" % grad_calls[0])
+            #print("         Gradient evaluations: %d" % grad_calls[0])
     else:
         msg = _status_message['success']
         if disp:
-            print(msg)
-            print("         Current function value: %f" % fval)
+           # print(msg)
+            #print("         Current function value: %f" % fval)
             print("         Iterations: %d" % k)
             print("         Function evaluations: %d" % func_calls[0])
             print("         Gradient evaluations: %d" % grad_calls[0])
@@ -1147,10 +1149,10 @@ if __name__ == "__main__":
         
         for i in range(len(fixed_x0)):
             print(f"run {i+1}")
-            fmin_bfgs(f, fixed_x0[i], fprime=None, args=(), gtol=1e-5, norm=float('inf'),maxfun = 3000,
+            fmin_bfgs(f, fixed_x0[i], fprime=None, args=(), gtol=1e-5, norm=float('inf'),maxfun = 300000,
             epsilon=np.sqrt(np.finfo(float).eps), maxiter=None, full_output=0, disp=1,
             retall=0, callback=None)
-            fmin_bfgs_perturbation(f, fixed_x0[i], fprime=None, args=(), gtol=1e-5, norm=float('inf'),maxfun = 3000,
+            fmin_bfgs_perturbation(f, fixed_x0[i], fprime=None, args=(), gtol=1e-5, norm=float('inf'),maxfun = 300000,
             epsilon=np.sqrt(np.finfo(float).eps), maxiter=None, full_output=0, disp=1,
             retall=0, callback=None)
             
