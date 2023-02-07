@@ -11,7 +11,7 @@ To have a fair comparison, the experiment is under these conditions for both sta
 
 ## Current Result (Jan. 2023)
 When the perturbation bigger than 80% of bounds: 
- !<img width="503" alt="image" src="https://user-images.githubusercontent.com/90204593/217311128-79840320-3839-40da-89fa-f6b160034500.png">
+ <img width="503" alt="image" src="https://user-images.githubusercontent.com/90204593/217311128-79840320-3839-40da-89fa-f6b160034500.png">
  <br/>When the perturbation bigger than 1% of bounds: 
  <img width="501" alt="image" src="https://user-images.githubusercontent.com/90204593/217322392-705509bb-db87-4456-ad9f-763bf53132b7.png">
 
