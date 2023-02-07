@@ -6,7 +6,7 @@ To have a fair comparison, the experiment is under these conditions for both sta
 ‼️ If the new generated end point is too close to original end point, then generate a new point until it's not too close. <br /> 
 ‼️ Min value of the loss function with perturbation VS Min value of the loss function w/o perturbaion <br /> 
 ‼️ Max. evaluations: 300,000  <br /> 
-‼️ Check if all the solutions generated in each evaluation is in the right search space.
+‼️ Check if all the solutions generated in each evaluation are in the right search space.
 
 ## Current Result (Jan. 2023)
 
