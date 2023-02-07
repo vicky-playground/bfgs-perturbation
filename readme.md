@@ -11,6 +11,6 @@ To have a fair comparison, the experiment is under these conditions for both sta
 
 ## Current Result (Jan. 2023)
 
- ![image](<img width="503" alt="image" src="https://user-images.githubusercontent.com/90204593/217311128-79840320-3839-40da-89fa-f6b160034500.png">)
+ !(<img width="503" alt="image" src="https://user-images.githubusercontent.com/90204593/217311128-79840320-3839-40da-89fa-f6b160034500.png">)
  ![image](https://user-images.githubusercontent.com/90204593/216679189-3af32a3a-4fe5-438f-877d-27f460126449.png)
  ![image](https://user-images.githubusercontent.com/90204593/216679204-00bce778-40d9-4843-a3cd-95c8441b0967.png)
