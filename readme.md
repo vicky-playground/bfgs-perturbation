@@ -10,7 +10,5 @@ To have a fair comparison, the experiment is under these conditions for both sta
 ‼️ Check if all the solutions generated in each evaluation are in the right search space.
 
 ## Current Result (Jan. 2023)
-When the perturbation bigger than 80% of bounds: 
- <img width="501" alt="image" src="https://user-images.githubusercontent.com/90204593/217322975-4630e6f4-103f-4fa1-b07a-80fa4a0b2dc7.png">
- <br/>When the perturbation bigger than 1% of bounds: 
+When the perturbation bigger than 1% of bounds: 
  <img width="498" alt="image" src="https://user-images.githubusercontent.com/90204593/217411699-60c76ff9-339b-454f-b00d-ceccd69cbfc8.png">
