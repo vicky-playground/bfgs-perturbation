@@ -1141,7 +1141,7 @@ if __name__ == "__main__":
     fixed_x0 = [] # record random start points     
 
     # 30 random start points
-    for i in range(1):
+    for i in range(30):
         start, stop= -100,100
         x0 = np.array([None for i in range(30)])  # set vector a
         for j in range(30):
