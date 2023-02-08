@@ -90,7 +90,7 @@ def wrap_function(function, args):
        
     def function_wrapper(*wrapper_args):
         fval = function(*(wrapper_args + args)) 
-        if (ncalls[0]>=3000): # meet the maximum evaluations 
+        if (ncalls[0]>=300000): # meet the maximum evaluations 
             return fval
         else:
             ncalls[0] += 1
@@ -106,13 +106,15 @@ def wrapper_function2(function, args):
        
     def function_wrapper(*wrapper_args, min=min):
         #print(*(wrapper_args + args)) # the new solution from each evaluation
-        np.where( wrapper_args>np.float64(100.0), np.float64(100.0), wrapper_args)
-        np.where( wrapper_args<np.float64(-100.0), np.float64(-100.0), wrapper_args)
-        #print(wrapper_args) # validate 
-        fval = function(*(wrapper_args + args)) 
+        solution = wrapper_args + args
+        #print(*(wrapper_args + args)) # the new solution from each evaluation
+         # limit the solution is in the search space 
+        solution = np.where( (solution)>np.float64(100.0), np.float64(100.0),solution)
+        solution = np.where( (solution)<np.float64(-100.0), np.float64(-100.0), solution)
+        #print(f"solutions: {solution}")
+        fval = function(*(solution)) 
         
         if ncalls[1] > fval:
-            ncalls[1] = fval
             ncalls[1] = fval
         if (ncalls[0]>=300000): # meet the maximum evaluations 
             return fval
@@ -876,10 +878,12 @@ def _minimize_bfgs_2(fun, x0, args=(), jac=None, callback=None,
         xkp1_new = np.array([None for i in range(30)])  # set a vector for later use
         for j in range(30):
             xkp1_new[j] = random.uniform(-bound/2,bound/2)
-        while  math.dist(xkp1_new,xkp1) <= 0.8*bound:
+        while  math.dist(xkp1_new,xkp1) <= 0.01*bound:
             for j in range(30):
                 xkp1_new[j] = random.uniform(-bound/2,bound/2)
         xkp1 = xkp1 + xkp1_new  # add the perturbation  
+        xkp1 = np.where( (xkp1)>np.float64(100.0), np.float64(100.0),xkp1)
+        xkp1 = np.where( (xkp1)<np.float64(-100.0), np.float64(-100.0), xkp1)
         return xkp1
        
     while (gnorm > gtol) and (k < maxiter) and (func_calls[0] < maxfun):  # limit the max number of evaluations
@@ -1043,6 +1047,10 @@ def _minimize_bfgs(fun, x0, args=(), jac=None, callback=None,
             warnflag = 2
             break
         xkp1 = xk + alpha_k * pk # the new solution of each iteration
+
+         # limit the solution is in the search space 
+        xkp1 = np.where( (xkp1)>np.float64(100.0), np.float64(100.0),xkp1)
+        xkp1 = np.where( (xkp1)<np.float64(-100.0), np.float64(-100.0), xkp1)
         
         if retall:
             allvecs.append(xkp1)
@@ -1070,12 +1078,12 @@ def _minimize_bfgs(fun, x0, args=(), jac=None, callback=None,
             rhok = 1.0 / (numpy.dot(yk, sk))
         except ZeroDivisionError:
             rhok = 1000.0 # default is 1000
-            if disp:
-                print("Divide-by-zero encountered: rhok assumed large")
+            #if disp:
+                #print("Divide-by-zero encountered: rhok assumed large")
         if isinf(rhok):  # this is patch for numpy. 
             rhok = 1000.0 # default is 1000
-            if disp:
-                print("Divide-by-zero encountered: rhok assumed large")
+            #if disp:
+                #print("Divide-by-zero encountered: rhok assumed large")
         A1 = I - sk[:, numpy.newaxis] * yk[numpy.newaxis, :] * rhok
         A2 = I - yk[:, numpy.newaxis] * sk[numpy.newaxis, :] * rhok
         Hk = numpy.dot(A1, numpy.dot(Hk, A2)) + (rhok * sk[:, numpy.newaxis] *
@@ -1133,7 +1141,7 @@ if __name__ == "__main__":
     fixed_x0 = [] # record random start points     
 
     # 30 random start points
-    for i in range(30):
+    for i in range(1):
         start, stop= -100,100
         x0 = np.array([None for i in range(30)])  # set vector a
         for j in range(30):
