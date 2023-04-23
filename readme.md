@@ -1,4 +1,4 @@
-# Medium: Optimization Algorithms and their Role in Machine Learning: A Quick Look at CMA-ES and BFGS <a href="https://medium.com/javarevisited/optimization-algorithms-and-their-role-in-machine-learning-a-look-at-cma-es-and-bfgs-25524ab0605e"></a> 
+# <a href="https://medium.com/javarevisited/optimization-algorithms-and-their-role-in-machine-learning-a-look-at-cma-es-and-bfgs-25524ab0605e">Medium: Optimization Algorithms and their Role in Machine Learning: A Quick Look at CMA-ES and BFGS</a> 
 
 # Using Perturbation to Optimize BFGS Algorithm
 
